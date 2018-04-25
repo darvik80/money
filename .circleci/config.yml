@@ -65,6 +65,8 @@ jobs:
 
       - run: scp -r target/*.jar $DEPLOY_USER@$VDS:/home/$DEPLOY_USER/deploy
 
+      - run: ssh $DEPLOY_USER@$VDS "service money restart"
+
 workflows:
   version: 2
   build-and-deploy:
