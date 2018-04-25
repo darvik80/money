@@ -40,6 +40,7 @@ jobs:
       # run tests!
       - run: mvn integration-test
 
-notify:
-  webhooks:
-    - url: http://phabricator.crearts.xyz/harbormaster/hook/circleci/
+experimental:
+  notify:
+    webhooks:
+      - url: http://phabricator.crearts.xyz/harbormaster/hook/circleci/
