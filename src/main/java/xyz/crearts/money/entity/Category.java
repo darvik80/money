@@ -1,7 +1,5 @@
 package xyz.crearts.money.entity;
 
-import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
