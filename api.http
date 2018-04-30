@@ -1,0 +1,11 @@
+PUT http://localhost:7001/api/cash_flow/1
+Content-Type: application/json
+
+{
+  "category": {
+    "id": 3,
+  },
+  "description": "April Test",
+  "amountOrigin": 1234,
+  "amount": 1234
+}

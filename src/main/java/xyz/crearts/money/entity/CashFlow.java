@@ -1,9 +1,11 @@
 package xyz.crearts.money.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 public class CashFlow {
@@ -18,11 +20,14 @@ public class CashFlow {
     @Size(max=255)
     private String description;
 
-    @NotNull
-    private Double amount;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
+
+    private Double amountOrigin;
 
     @NotNull
-    private Instant dateTime;
+    private Double amount;
 
     public Long getId() {
         return id;
@@ -56,11 +61,19 @@ public class CashFlow {
         this.amount = amount;
     }
 
-    public Instant getDateTime() {
-        return dateTime;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateTime(Instant dateTime) {
-        this.dateTime = dateTime;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Double getAmountOrigin() {
+        return amountOrigin;
+    }
+
+    public void setAmountOrigin(Double amountOrigin) {
+        this.amountOrigin = amountOrigin;
     }
 }

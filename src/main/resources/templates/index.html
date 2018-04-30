@@ -2,26 +2,150 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/webjars/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+    <title>Cash flow</title>
 
-    <script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
-    <script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="/webjars/popper.js/1.11.1/dist/umd/popper.min.js"></script>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}">
 
-    <script src="/webjars/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/webjars/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+    <script src="/webjars/popper.js/1.14.1/umd/popper.min.js"></script>
+
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+    <style>
+        .block {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+
+        .column {
+            flex: 20%;
+            max-width: 100%;
+            padding: 0 4px;
+        }
+
+        .column img {
+            margin-top: 8px;
+            vertical-align: middle;
+        }
+
+        /* Responsive layout - makes a two column-layout instead of four columns */
+        @media screen and (max-width: 800px) {
+            .column {
+                flex: 50%;
+                max-width: 50%;
+            }
+        }
+
+        /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 600px) {
+            .column {
+                flex: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+<script type='text/javascript' src='/webjars/knockout/3.4.2/dist/knockout.js'></script>
+
+
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h1>Hello from service</h1>
+        <div class="col-md-12" >
+            <form id="categories">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="amount">Amount</label><input type="number" data-bind="value: amount" class="form-control text-md-right" min="0" id="amount">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="block">
+                            <div class="column" data-bind="foreach: categories">
+                                <button type="button" data-bind="click: btnCategory"><img src="#" data-bind="attr: { src: urlImage }" width="32"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="row">
+    </div>
+
+    <div class="row" id="cash_flow">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="ion-image"></th>
+                    <th scope="col" class="text-center">Name</th>
+                    <th scope="col" class="d-none d-md-block text-center">Description</th>
+                    <th scope="col" class="ion-cash"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: flows" >
+                <tr>
+                    <td scope="row"><img src="#" alt="image" width="32" height="32"
+                                         data-bind="attr: { src: category.urlImage }"></td>
+                    <td data-bind="text: category.name">Shop</td>
+                    <td data-bind="text: description" class="d-none d-md-block">Weekly shopping</td>
+                    <td data-bind="text: category.currency.name">VND</td>
+                    <td data-bind="text: amount"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+
+<script type="text/javascript">
+    ko.applyBindings(function () {
+        var self = this;
+        self.flows = ko.observableArray();
+
+        self.amount = ko.observable();
+        self.categories = ko.observableArray();
+
+        self.btnCategory = function (category) {
+            var flow = {
+                'description': category.name,
+                'category': category,
+                'amount': self.amount()
+            };
+
+            $.ajax({
+                    url: "/rest/cash_flow/",
+                    type: "POST",
+                    data: JSON.stringify(flow),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (updated) {
+                        self.flows.unshift(updated);
+                        self.amount('');
+                    }
+                }
+            );
+        }
+
+    });
+
+    self.update = function(data) {
+        self.flows(data);
+    };
+
+    $.get("/rest/cash_flow", function (data) {
+        self.update(data);
+    });
+
+    $.get("/rest/category", function (data) {
+        self.categories(data);
+    });
+
+</script>
+
 </body>
-</html>
