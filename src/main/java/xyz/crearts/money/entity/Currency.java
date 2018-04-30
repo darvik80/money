@@ -1,10 +1,8 @@
 package xyz.crearts.money.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 public class Currency {
@@ -12,8 +10,10 @@ public class Currency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Size(max=4)
+    @Column(unique = true)
     private String name;
     @Size(max=4)
+    @Column(unique = true)
     private String code;
 
     public Long getId() {

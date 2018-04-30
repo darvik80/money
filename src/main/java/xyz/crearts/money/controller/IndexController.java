@@ -2,8 +2,9 @@ package xyz.crearts.money.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import xyz.crearts.money.entity.Category;
+import xyz.crearts.money.repository.CategoryRepository;
 import xyz.crearts.money.repository.CurrencyRepository;
 
 /**
@@ -11,10 +12,12 @@ import xyz.crearts.money.repository.CurrencyRepository;
  */
 @Controller
 public class IndexController {
-    CurrencyRepository currencyRepository;
+    private CurrencyRepository currencyRepository;
+    private CategoryRepository categoryRepository;
 
 
-    IndexController(CurrencyRepository currencyRepository) {
+    IndexController(CategoryRepository categoryRepository, CurrencyRepository currencyRepository) {
+        this.categoryRepository = categoryRepository;
         this.currencyRepository = currencyRepository;
     }
 
@@ -23,5 +26,16 @@ public class IndexController {
         model.addAttribute("currencies", this.currencyRepository.findAll());
 
         return "index";
+    }
+
+    @GetMapping("/categories")
+    public String categoriesAction(Model model) {
+        return "categories";
+    }
+
+    @GetMapping("/lab")
+    public String labAction(Model model) {
+
+        return "lab";
     }
 }

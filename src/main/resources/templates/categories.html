@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/webjars/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+    <script src="/webjars/popper.js/1.14.1/umd/popper.min.js"></script>
+
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Categories</h1>
+        </div>
+    </div>
+    <div class="row" id="categories">
+        <div class="col-md-1 hidden-sm "></div>
+
+        <div class="col-md-10 offset-1-md">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="ion-image"></th>
+                    <th scope="col" class="text-center">Name</th>
+                    <th scope="col" class="d-none d-md-block text-center">Description</th>
+                    <th scope="col" class="ion-social-usd"></th>
+                    <th scope="col" class="ion-cash"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: categories" >
+                <tr>
+                    <td scope="row"><img src="/images/shop-icon.png" alt="image" width="32" height="32"
+                                         data-bind="attr: { src: urlImage }"></td>
+                    <td data-bind="text: name">Shop</td>
+                    <td data-bind="text: description" class="d-none d-md-block">Weekly shopping</td>
+                    <td data-bind="text: selCurrency">VND</td>
+                    <td data-bind="attr: { class: operation == 1 ? 'ion-plus-circled' : 'ion-minus-circled' }"></td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle ion-more" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <button class="dropdown-item" type="button" data-bind="click: btnEdit"><span class="ion-edit"></span> Edit</button>
+                                <button class="dropdown-item" type="button" data-bind="click: btnDelete"><span class="ion-trash-a"></span> Delete</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="offset-md-10 col-md-2">
+                <button class="btn btn-primary" data-toggle="modal" data-bind="click: btnNew"><span class="ion-plus"></span> Create
+                </button>
+            </div>
+
+            <script type='text/javascript' src='/webjars/knockout/3.4.2/dist/knockout.js'></script>
+
+            <script type="text/javascript">
+                ko.applyBindings(function () {
+                    var self = this;
+
+                    self.data = null;
+                    self.currencies = null;
+                    self.currenciesLink = null;
+                    self.categories = ko.observableArray();
+
+                    self.images = null;
+
+                    self.btnEdit = function (cur) {
+                        dlgModal = document.getElementById("categoryEdit");
+
+                        ko.cleanNode(dlgModal);
+
+                        var dlgModel = function () {
+                            var dlg = this;
+
+                            dlg.currencies = self.currencies;
+                            dlg.images = self.images;
+                            dlg.category = ko.observable(cur);
+                            dlg.onChange = function () {
+                                $.ajax({
+                                        url: cur._links.self.href,
+                                        type: "PUT",
+                                        data: ko.toJSON(dlg.category),
+                                        contentType: "application/json; charset=utf-8",
+                                        success: function (updated) {
+                                            $.ajax({
+                                                url: cur._links.currency.href,
+                                                type: "PUT",
+                                                data: self.currenciesLink[cur.selCurrency],
+                                                contentType: "text/uri-list",
+                                                success: function () {
+                                                    updated.selCurrency = cur.selCurrency;
+                                                    self.categories.replace(cur, updated);
+                                                }
+                                            });
+                                        }
+                                    }
+                                );
+
+                                $('#categoryEdit').modal('hide');
+                            };
+
+                        };
+                        ko.applyBindings(new dlgModel(), dlgModal);
+
+                        $('#categoryEdit').modal('show');
+                    };
+
+                    self.btnDelete = function (category) {
+                        var dlg = $('#warningDialog');
+                        var btn = $('#warningDialog #btnDelete');
+                        btn.unbind('click')
+                        btn.click(function(){
+                            $.ajax({
+                                    url: category._links.self.href, type: "DELETE",
+                                    success: function () {
+                                        self.categories.remove(category);
+                                        dlg.modal('hide');
+                                    }
+                                }
+                            );
+                        });
+                        dlg.modal('show');
+                    };
+                    
+                    self.btnNew = function () {
+                        dlgModal = document.getElementById("categoryEdit");
+
+                        ko.cleanNode(dlgModal);
+
+                        var dlgModel = function () {
+                            var dlg = this;
+
+                            dlg.currencies = self.currencies;
+                            dlg.images = self.images;
+
+                            dlg.category = ko.observable({
+                                name: '',
+                                description: 'some description',
+                                urlImage: '/images/salary-icon.png',
+                                operation: 1,
+                                selCurrency: 'VND'
+                            });
+
+                            dlg.onChange = function () {
+                                $.ajax({
+                                        url: '/api/categories',
+                                        type: "POST",
+                                        data: ko.toJSON(dlg.category),
+                                        contentType: "application/json; charset=utf-8",
+                                        success: function (updated) {
+                                            console.table(updated);
+                                            console.log(dlg.category.selCurrency);
+                                            $.ajax({
+                                                url: updated._links.currency.href,
+                                                type: "PUT",
+                                                data: self.currenciesLink[dlg.category().selCurrency],
+                                                contentType: "text/uri-list",
+                                                success: function () {
+                                                    updated.selCurrency = dlg.category().selCurrency;
+                                                    self.categories.push(updated);
+                                                }
+                                            });
+                                        }
+                                    }
+                                );
+
+                                $('#categoryEdit').modal('hide');
+                            }
+                        };
+                        ko.applyBindings(new dlgModel(), dlgModal);
+                        $('#categoryEdit').modal('show');
+                    }
+
+                }, document.getElementById("categories"));
+
+                self.update = function() {
+                    if (self.data == null) {
+                        return;
+                    }
+                    if (self.currencies == null) {
+                        return;
+                    }
+
+                    if (self.images == null) {
+                        return;
+                    }
+
+                    self.categories(self.data);
+
+                };
+
+                $.get("/api/images", function (data) {
+                    var images = [];
+                    data._embedded.images.forEach(function (item) {
+                        images.push(item.url);
+                    });
+                    self.images = images;
+                    self.update();
+                });
+
+                $.get("/api/currencies", function (data) {
+                    var currencies = [];
+                    var currenciesLink = {};
+
+                    data._embedded.currencies.forEach(function (item) {
+                        currencies.push(item.name);
+                        currenciesLink[item.name] = item._links.self.href;
+                    });
+                    self.currencies = currencies;
+                    self.currenciesLink = currenciesLink;
+
+                    self.update();
+                });
+
+                $.get("/api/categories", function (raw) {
+                    var data = raw._embedded.categories;
+
+                    var count = data.length;
+                    data.forEach(function (category) {
+                        $.get(category._links.currency.href, function (currency) {
+                            category.selCurrency = currency.name;
+                            if (--count === 0) {
+                                self.data = data;
+                                self.update();
+                            }
+                        })
+                    });
+                });
+            </script>
+
+        </div>
+
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="categoryEdit" data-bind="showModal:category, with:category">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10 offset-1-md">
+                                <form action="#">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="image">Image</label>
+                                            <select class="form-control form-control-md selectpicker"
+                                                    id="image" data-bind="options: images,
+                                                     data-thumbnail: url,
+                                                     value: urlImage,
+                                                     attr: { selectedOptions: urlImage }"
+                                            >
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label for="name">Name</label>
+                                            <input data-bind="value: name" type="text" class="form-control" id="name"
+                                                   placeholder="some name" required minlength="4">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="description">Description</label>
+                                            <input data-bind="value: description" type="text" class="form-control"
+                                                   id="description"
+                                                   placeholder="some short description">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="currency">Currency</label>
+                                            <select class="form-control form-control-md selectpicker"
+                                                    id="currency" data-bind="options: currencies,
+                                                     optionsText: function(item) {
+                                                        return item
+                                                     },
+                                                     value: selCurrency,
+                                                     attr: { selectedOptions: selCurrency }"
+                                            >
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="form-check">
+                                                <label>
+                                                    <input name="operation"
+                                                           data-bind="checkedValue: 1, checked: operation"
+                                                           class="form-check-input" type="radio">
+                                                    Debit
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label>
+                                                    <input name="operation"
+                                                           data-bind="checkedValue: 2, checked: operation"
+                                                           class="form-check-input" type="radio">
+                                                    Credit
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group offset-md-10 col-md-2">
+                                            <button class="btn btn-primary" data-bind="click: $root.onChange, text: name == '' ? 'Create' : 'Update'"></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning -->
+    <div class="modal" tabindex="-1" role="dialog" id="warningDialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Warning</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnDelete">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

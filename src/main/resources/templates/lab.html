@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}">
+
+    <link rel="stylesheet" type="text/css" media="screen" th:href="@{/webjars/ionicons/2.0.1/css/ionicons.min.css}">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+    <script src="/webjars/popper.js/1.14.1/umd/popper.min.js"></script>
+
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+
+    <script src="/webjars/traverson/6.0.1/browser/dist/traverson.min.js"></script>
+    <script src="/webjars/traverson/6.0.1/browser/dist/traverson.external.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Hello from service</h1>
+        </div>
+        <div class="row">
+
+
+        </div>
+    </div>
+</div>
+
+<script  type="text/javascript">
+    traverson
+        .from('/api/categories')
+        .json()
+        .getResource(function(error, document) {
+            if (error) {
+                console.error(error)
+            } else {
+                console.log('We have followed the path and reached the target resource.')
+                console.log(JSON.stringify(document))
+            }
+        });
+
+    traverson
+        .from('/api/categories/1')
+        .follow('$._links.currency')
+        .getResource(function(error, document) {
+            if (error) {
+                console.error(error)
+            } else {
+                console.log('We have followed the path and reached the target resource.')
+                console.log(JSON.stringify(document))
+            }
+        });
+</script>
+
+</body>
+</html>
