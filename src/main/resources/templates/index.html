@@ -97,7 +97,7 @@
                     <td data-bind="attr: { class: category.operation == 1 ? 'ion-plus-circled' : 'ion-minus-circled' }"></td>
                     <td>
                         <span data-bind="text: category.currency.name" class="left"></span>:
-                        <span data-bind="text: amount" class="text-right"></span>
+                        <span data-bind="text: category.name == 'VND' ? amount : amountOrigin" class="text-right"></span>
                     </td>
                     <td class="text-center">
                         <div class="btn-group">
