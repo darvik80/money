@@ -67,7 +67,7 @@
                     <div class="form-group col-md-12">
                         <div class="block">
                             <div class="column" data-bind="foreach: categories">
-                                <button type="button" data-bind="click: btnCategory"><img src="#" data-bind="attr: { src: urlImage }" width="32"></button>
+                                <button type="button" data-bind="click: btnCategory"><img src="#" data-toggle="tooltip" data-placement="top" data-bind="attr: { src: urlImage, title: name }" width="32"></button>
                             </div>
                         </div>
                     </div>
@@ -80,22 +80,35 @@
         <div class="col-md-12">
             <table class="table table-striped">
                 <thead class="thead-dark">
-                <tr>
+                <tr class="text-center">
                     <th scope="col" class="ion-image"></th>
-                    <th scope="col" class="text-center">Name</th>
-                    <th scope="col" class="d-none d-md-block text-center">Description</th>
+                    <th scope="col">Name</th>
+                    <th scope="col" class="d-none d-md-block">Description</th>
+                    <th scope="col" class="ion-social-usd"></th>
                     <th scope="col" class="ion-cash"></th>
+                    <th scope="col" class="ion-bag "></th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tbody data-bind="foreach: flows" >
+                <tbody data-bind="foreach: flows" class="text-center">
                 <tr>
                     <td scope="row"><img src="#" alt="image" width="32" height="32"
                                          data-bind="attr: { src: category.urlImage }"></td>
-                    <td data-bind="text: category.name">Shop</td>
-                    <td data-bind="text: description" class="d-none d-md-block">Weekly shopping</td>
+                    <td data-bind="text: category.name" class="text-left">Shop</td>
+                    <td data-bind="text: description" class="d-none d-md-block text-left">Weekly shopping</td>
                     <td data-bind="text: category.currency.name">VND</td>
-                    <td data-bind="text: amount"></td>
+                    <td data-bind="attr: { class: category.operation == 1 ? 'ion-plus-circled' : 'ion-minus-circled' }"></td>
+                    <td data-bind="text: amount" class="text-right"></td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle ion-more" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <button class="dropdown-item" type="button" data-bind="click: btnEditFlow"><span class="ion-edit"></span> Edit</button>
+                                <button class="dropdown-item" type="button" data-bind="click: btnDeleteFlow"><span class="ion-trash-a"></span> Delete</button>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -111,6 +124,13 @@
 
         self.amount = ko.observable();
         self.categories = ko.observableArray();
+
+        self.btnEditFlow = function(flow) {
+            console.table(flow);
+        };
+        self.btnDeleteFlow = function(flow) {
+            console.table(flow);
+        };
 
         self.btnCategory = function (category) {
             var flow = {
@@ -130,6 +150,7 @@
                     }
                 }
             );
+
         }
 
     });

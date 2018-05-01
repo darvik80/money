@@ -120,6 +120,10 @@
                     };
 
                     self.btnDelete = function (category) {
+                        $('#warningDialog #modalBody').show();
+                        $('#warningDialog #btnDelete').show();
+                        $('#alert').hide();
+
                         var dlg = $('#warningDialog');
                         var btn = $('#warningDialog #btnDelete');
                         btn.unbind('click')
@@ -129,6 +133,13 @@
                                     success: function () {
                                         self.categories.remove(category);
                                         dlg.modal('hide');
+                                    },
+                                    error: function (err) {
+                                        $('#warningDialog #modalBody').hide();
+                                        $('#warningDialog #btnDelete').hide();
+                                        $('#alert #message').text(err.responseJSON.message);
+                                        $('#alert').show();
+
                                     }
                                 }
                             );
@@ -342,7 +353,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure?</p>
+                    <div id="modalBody">Are you sure?</div>
+
+                    <!-- alert -->
+                    <div class="alert alert-warning alert-dismissible collapse" role="alert" id="alert">
+                        <div id="message">message</div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="btnDelete">Delete</button>
@@ -351,6 +367,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 </body>
