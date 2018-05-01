@@ -29,4 +29,9 @@ public class CashFlowApiController {
     public Object createAction(@RequestBody CashFlow flow) {
         return this.cashFlowRepository.save(flow);
     }
+    @DeleteMapping("/{id}")
+    public String deleteAction(@PathVariable long id) {
+        this.cashFlowRepository.deleteById(id);
+        return "success";
+    }
 }

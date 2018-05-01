@@ -135,7 +135,12 @@
             console.table(flow);
         };
         self.btnDeleteFlow = function(flow) {
-            console.table(flow);
+            $.ajax({
+                url: '/rest/cash_flow/' + flow.id, type: "DELETE",
+                success: function () {
+                    self.flows.remove(flow);
+                }
+            });
         };
 
         self.btnCategory = function (category) {
@@ -150,7 +155,6 @@
                 'amount': amount,
                 'amountOrigin': amountOrigin
             };
-
 
             $.ajax({
                     url: "/rest/cash_flow/",
