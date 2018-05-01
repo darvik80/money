@@ -97,7 +97,12 @@
                     <td data-bind="attr: { class: category.operation == 1 ? 'ion-plus-circled' : 'ion-minus-circled' }"></td>
                     <td>
                         <span data-bind="text: category.currency.name" class="left"></span>:
-                        <span data-bind="text: category.name == 'VND' ? amount : amountOrigin" class="text-right"></span>
+                        <!-- ko if: category.currency.name == 'VND' -->
+                        <span data-bind="text: amount" class="text-right"></span>
+                        <!-- /ko -->
+                        <!-- ko if: category.currency.name != 'VND' -->
+                        <span data-bind="text: amountOrigin" class="text-right"></span>
+                        <!-- /ko -->
                     </td>
                     <td class="text-center">
                         <div class="btn-group">
@@ -123,6 +128,7 @@
         self.flows = ko.observableArray();
 
         self.amount = ko.observable();
+        self.amountOrigin = ko.observable();
         self.categories = ko.observableArray();
 
         self.btnEditFlow = function(flow) {
@@ -133,11 +139,18 @@
         };
 
         self.btnCategory = function (category) {
+            var amount = self.amount();
+            var amountOrigin = self.amount();
+            if (category.currency.name !== 'VND') {
+                amount = amount * 22600;
+            }
             var flow = {
                 'description': category.name,
                 'category': category,
-                'amount': self.amount()
+                'amount': amount,
+                'amountOrigin': amountOrigin
             };
+
 
             $.ajax({
                     url: "/rest/cash_flow/",
