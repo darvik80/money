@@ -1,13 +1,14 @@
 package xyz.crearts.money.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import xyz.crearts.money.entity.CashFlow;
-import xyz.crearts.money.entity.Category;
-import xyz.crearts.money.repository.CashFlowRepository;
-import xyz.crearts.money.repository.CategoryRepository;
-import xyz.crearts.money.repository.CurrencyRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import xyz.crearts.money.model.Config;
+import xyz.crearts.money.service.Currency;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ivan.kishchenko
@@ -15,6 +16,19 @@ import xyz.crearts.money.repository.CurrencyRepository;
 @Controller("indexController")
 @RequestMapping("/")
 public class IndexController {
+    private Map<String, Object> config = new HashMap<>();
+    private Currency currency;
+
+    @ModelAttribute("config")
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    public IndexController(Config config, Currency currency) {
+        this.config.put("defaultCurrency", config.getDefaultCurrency());
+        this.config.put("RUB", currency.getAmount("RUB"));
+    }
+
     @GetMapping({"/", ""})
     public String indexAction() {
         return "index";
@@ -23,11 +37,5 @@ public class IndexController {
     @GetMapping("/categories")
     public String categoriesAction() {
         return "categories";
-    }
-
-    @GetMapping("/lab")
-    public String labAction() {
-
-        return "lab";
     }
 }
