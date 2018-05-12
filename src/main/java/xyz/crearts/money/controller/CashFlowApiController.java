@@ -1,5 +1,7 @@
 package xyz.crearts.money.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import xyz.crearts.money.entity.CashFlow;
 import xyz.crearts.money.repository.CashFlowRepository;
@@ -14,8 +16,8 @@ public class CashFlowApiController {
     }
 
     @GetMapping({"", "/"})
-    public Object flowsAction() {
-        return cashFlowRepository.findAllByOrderByIdDesc();
+    public Page<CashFlow> flowsAction(Pageable pageable) {
+        return cashFlowRepository.findAllByOrderByIdDesc(pageable);
     }
 
 

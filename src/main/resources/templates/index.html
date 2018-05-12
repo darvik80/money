@@ -56,7 +56,6 @@
 <script type='text/javascript' th:inline="javascript">
     /*<![CDATA[*/
     var config = /*[[${config}]]*/ [];
-    console.log(config);
 
     /*]]>*/
 </script>
@@ -138,6 +137,8 @@
         self.amount = ko.observable();
         self.amountOrigin = ko.observable();
         self.categories = ko.observableArray();
+        self.page = 0;
+        self.size = 10;
 
         self.btnEditFlow = function(flow) {
             console.table(flow);
@@ -171,6 +172,10 @@
                     contentType: "application/json; charset=utf-8",
                     success: function (updated) {
                         self.flows.unshift(updated);
+                        console.log(self.flows().length + " " + self.size);
+                        if (self.flows().length > self.size) {
+                            self.flows.pop();
+                        }
                         self.amount('');
                     }
                 }
@@ -181,10 +186,10 @@
     });
 
     self.update = function(data) {
-        self.flows(data);
+        self.flows(data.content);
     };
 
-    $.get("/rest/cash_flow", function (data) {
+    $.get("/rest/cash_flow?page=" +self.page+"&size="+self.size, function (data) {
         self.update(data);
     });
 
