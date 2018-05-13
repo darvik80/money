@@ -14,6 +14,7 @@ INSERT INTO `category` (`id`, `name`, `description`, `currency_id`, `operation`,
 INSERT INTO `category` (`id`, `name`, `description`, `currency_id`, `operation`, `url_image`) VALUES (8, 'Nanny', 'Cleaning, kids take care', 2, 2, '/images/bucket-icon.png');
 INSERT INTO `category` (`id`, `name`, `description`, `currency_id`, `operation`, `url_image`) VALUES (9, 'Scooter', 'Gasolene, maintenance', 2, 2, '/images/scooter-icon.png');
 INSERT INTO `category` (`id`, `name`, `description`, `currency_id`, `operation`, `url_image`) VALUES (10, 'Sauna', 'Golder lotus', 2, 2, '/images/sauna-icon.png');
+INSERT INTO `category` (`id`, `name`, `description`, `currency_id`, `operation`, `url_image`) VALUES (11, 'Pharmacy', 'Medicines, vitamins ...', 2, 2, '/images/drugstore-icon.png');
 
 INSERT INTO `image` (`url`) VALUES ('/images/shop-icon.png');
 INSERT INTO `image` (`url`) VALUES ('/images/beer-icon.png');
