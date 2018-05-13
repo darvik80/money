@@ -114,6 +114,12 @@
             <version>3.4.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>mdbfree</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
         <!-- webjars -->
 
         <dependency>

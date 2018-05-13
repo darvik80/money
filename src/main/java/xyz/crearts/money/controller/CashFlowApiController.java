@@ -27,6 +27,11 @@ public class CashFlowApiController {
         return this.cashFlowRepository.save(flow);
     }
 
+
+    @GetMapping("/report/pie")
+    public Object pieReportAction() {
+        return this.cashFlowRepository.getAllGroupByCategory();
+    }
     @PostMapping("/")
     public Object createAction(@RequestBody CashFlow flow) {
         return this.cashFlowRepository.save(flow);
