@@ -138,7 +138,9 @@
                         </a>
                     </li>
                     <!-- ko foreach: pages -->
-                    <li class="page-item" data-bind="css: { active: page == $index() }"><a class="page-link" href="#" data-bind="text: $index()+1, click: function(){ btnPage($index()); }"></a></li>
+                    <li class="page-item" data-bind="css: { active: $data }">
+                        <a class="page-link" href="#" data-bind="text: $index()+1, click: function() { btnPage($index()); }"></a>
+                    </li>
                     <!-- /ko -->
                     <li class="page-item" data-bind="css: { disabled : last }, click: btnLastPage">
                         <a class="page-link" href="#" aria-label="Next">
@@ -161,9 +163,8 @@
         self.amount = ko.observable();
         self.amountOrigin = ko.observable();
         self.categories = ko.observableArray();
-        self.page = ko.observable(0);
+        self.curPage = ko.observable(0);
         self.size = 10;
-        self.pageable = ko.observableArray();
         self.first = ko.observable(false);
         self.last = ko.observable(false);
         self.totalPages = ko.observable(5);
@@ -176,9 +177,10 @@
             $.ajax({
                 url: '/rest/cash_flow/' + flow.id, type: "DELETE",
                 success: function () {
-                    self.flows.remove(flow);
-                    if (false === self.first() && false === self.last()) {
-                        self.getPage(self.page);
+                    if (false === self.first()) {
+                        self.getPage(self.curPage());
+                    } else {
+                        self.flows.remove(flow);
                     }
                 }
             });
@@ -203,8 +205,8 @@
                     data: JSON.stringify(flow),
                     contentType: "application/json; charset=utf-8",
                     success: function (updated) {
-                        if (false === self.first() && false === self.last()) {
-                            self.getPage(self.page);
+                        if (false === self.first()) {
+                            self.getPage(self.curPage());
                         } else {
                             self.flows.unshift(updated);
                             if (self.flows().length > self.size) {
@@ -237,13 +239,14 @@
         };
 
         self.update = function(data) {
+            self.curPage(data.number);
             self.flows(data.content);
-            self.pageable(data.pageable);
             self.first(data.first);
             self.last(data.last);
             self.totalPages(data.totalPages);
-            self.pages(new Array(data.totalPages));
-            self.page = data.number;
+            var pages = new Array(data.totalPages);
+            pages[data.number] = true;
+            self.pages(pages);
         };
 
         self.getPage(0);
