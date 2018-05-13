@@ -115,9 +115,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>mdbfree</artifactId>
-            <version>3.4.1</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>highcharts</artifactId>
+            <version>6.1.0</version>
         </dependency>
 
         <!-- webjars -->
