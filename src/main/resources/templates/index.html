@@ -158,16 +158,18 @@
 <script type="text/javascript">
     ko.applyBindings(function () {
         var self = this;
+
+        self.size = 10;
+        self.totalPages = 0;
+
         self.flows = ko.observableArray();
 
         self.amount = ko.observable();
         self.amountOrigin = ko.observable();
         self.categories = ko.observableArray();
         self.curPage = ko.observable(0);
-        self.size = 10;
         self.first = ko.observable(false);
         self.last = ko.observable(false);
-        self.totalPages = ko.observable(5);
         self.pages = ko.observableArray();
 
         self.btnEditFlow = function(flow) {
@@ -177,11 +179,7 @@
             $.ajax({
                 url: '/rest/cash_flow/' + flow.id, type: "DELETE",
                 success: function () {
-                    if (false === self.first()) {
-                        self.getPage(self.curPage());
-                    } else {
-                        self.flows.remove(flow);
-                    }
+                    self.getPage(self.curPage());
                 }
             });
         };
@@ -204,7 +202,10 @@
                     type: "POST",
                     data: JSON.stringify(flow),
                     contentType: "application/json; charset=utf-8",
-                    success: function (updated) {
+                    success: function () {
+                        self.amount('');
+                        self.getPage(self.curPage());
+                        /*
                         if (false === self.first()) {
                             self.getPage(self.curPage());
                         } else {
@@ -213,7 +214,7 @@
                                 self.flows.pop();
                             }
                             self.amount('');
-                        }
+                        }*/
                     }
                 }
             );
@@ -225,7 +226,7 @@
         };
 
         self.btnLastPage = function() {
-            self.getPage(self.totalPages() - 1);
+            self.getPage(self.totalPages - 1);
         };
 
         self.btnPage = function (page) {
@@ -243,7 +244,6 @@
             self.flows(data.content);
             self.first(data.first);
             self.last(data.last);
-            self.totalPages(data.totalPages);
             var pages = new Array(data.totalPages);
             pages[data.number] = true;
             self.pages(pages);
