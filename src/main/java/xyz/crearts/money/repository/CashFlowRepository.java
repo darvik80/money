@@ -12,6 +12,6 @@ import java.util.List;
 public interface CashFlowRepository extends CrudRepository<CashFlow, Long> {
     Page<CashFlow> findAllByOrderByIdDesc(Pageable pageable);
 
-    @Query(value = "SELECT `category_id`, `name`,  SUM(`amount`) from `cash_flow` JOIN `category` ON `category_id` = `category`.`id` GROUP BY `category_id`", nativeQuery = true)
-    List<?> getAllGroupByCategory();
+    @Query("select new xyz.crearts.money.entity.CashFlowPieChart(cs.category.id, cs.category.name, sum(cs.amount)) from CashFlow cs group by cs.category.id")
+    List<CashFlowPieChart> getAllGroupByCategory();
 }
