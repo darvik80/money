@@ -209,6 +209,8 @@
                     success: function () {
                         self.amount('');
                         self.getPage(self.curPage());
+
+                        reloadDiagrams();
                         /*
                         if (false === self.first()) {
                             self.getPage(self.curPage());
@@ -324,9 +326,13 @@
         });
     };
 
-    fnDiagram('day', 'pieChartDay');
-    fnDiagram('week', 'pieChartWeek');
-    fnDiagram('month', 'pieChartMonth');
+    function reloadDiagrams() {
+        fnDiagram('day', 'pieChartDay');
+        fnDiagram('week', 'pieChartWeek');
+        fnDiagram('month', 'pieChartMonth');
+    }
+
+    reloadDiagrams();
 </script>
 </div>
 
