@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import xyz.crearts.money.entity.CashFlow;
+import xyz.crearts.money.entity.CashFlowPieChart;
 import xyz.crearts.money.repository.CashFlowRepository;
 
 import java.sql.Time;
@@ -15,6 +16,7 @@ import java.time.MonthDay;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rest/cash_flow")
@@ -48,18 +50,20 @@ public class CashFlowApiController {
                 end = begin.plus(1, ChronoUnit.DAYS);
                 break;
             case "week":
-                begin = now.minusDays(now.getDayOfWeek().getValue());
+                begin = now.minusDays(now.getDayOfWeek().getValue()-1);
                 end = begin.plus(1, ChronoUnit.WEEKS);
                 break;
             case "month":
             default:
-                begin = now.minusDays(now.getDayOfWeek().getValue());
+                begin = now.minusDays(now.getDayOfMonth()-1);
                 end = begin.plus(1, ChronoUnit.MONTHS);
                 break;
         }
 
+        /*
         System.out.println(begin.toString());
         System.out.println(end.toString());
+        */
 
         return this.cashFlowRepository.getAllGroupByCategory(Timestamp.valueOf(begin), Timestamp.valueOf(end));
     }
