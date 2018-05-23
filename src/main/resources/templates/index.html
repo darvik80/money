@@ -56,6 +56,9 @@
     </style>
 </head>
 <body>
+
+<div th:include="navbar :: main-menu"></div>
+
 <script type='text/javascript' src='/webjars/knockout/3.4.2/dist/knockout.js'></script>
 
 <script type='text/javascript' th:inline="javascript">
@@ -212,7 +215,6 @@
                         self.amount('');
                         self.getPage(self.curPage());
 
-                        reloadDiagrams();
                         /*
                         if (false === self.first()) {
                             self.getPage(self.curPage());
@@ -271,78 +273,6 @@
         self.categories(data);
     });
 
-</script>
-<!--
-    <div class="row">
-        <div class="col-md-12">
-            <div id="pieChartDay"></div>
-        </div>
-    </div>
- -->
-
-    <div class="row">
-        <div class="col-md-12">
-            <div id="pieChartWeek"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div id="pieChartMonth"></div>
-        </div>
-    </div>
-
-<script type="text/javascript">
-
-    var fnDiagram = function(period, element) {
-        // Build the chart
-        $.get("/rest/cash_flow/report/pie/" + period, function (data) {
-            var pieData = [];
-
-            var total = 0;
-            data.forEach(function (item) {
-                pieData.push({name: item.name, y: item.amount})
-                total += item.amount;
-            });
-
-            Highcharts.chart(element, {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: 'Money flow for ' + period +  ': ' + total + " VND"
-                },
-                tooltip: {
-                    pointFormat: '<b>{point.y:.1f} VND / {point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Categories',
-                    colorByPoint: true,
-                    data: pieData
-                }]
-            });
-        });
-    };
-
-    function reloadDiagrams() {
-        //fnDiagram('day', 'pieChartDay');
-        fnDiagram('week', 'pieChartWeek');
-        fnDiagram('month', 'pieChartMonth');
-    }
-
-    reloadDiagrams();
 </script>
 </div>
 

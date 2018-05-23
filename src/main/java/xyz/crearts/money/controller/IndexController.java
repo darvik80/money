@@ -38,4 +38,9 @@ public class IndexController {
     public String categoriesAction() {
         return "categories";
     }
+
+    @GetMapping("/report")
+    public String reportAction() {
+        return "report";
+    }
 }

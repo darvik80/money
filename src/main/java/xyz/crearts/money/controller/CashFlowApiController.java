@@ -41,7 +41,7 @@ public class CashFlowApiController {
 
 
     @GetMapping("/report/pie/{period}")
-    public Object pieReportAction(@PathVariable(value = "period", required = false) String period) {
+    public List<CashFlowPieChart> pieReportAction(@PathVariable(value = "period", required = false) String period) {
         LocalDateTime begin, end;
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
         switch (period) {
@@ -60,11 +60,6 @@ public class CashFlowApiController {
                 break;
         }
 
-        /*
-        System.out.println(begin.toString());
-        System.out.println(end.toString());
-        */
-
         return this.cashFlowRepository.getAllGroupByCategory(Timestamp.valueOf(begin), Timestamp.valueOf(end));
     }
 
@@ -72,6 +67,7 @@ public class CashFlowApiController {
     public Object createAction(@RequestBody CashFlow flow) {
         return this.cashFlowRepository.save(flow);
     }
+
     @DeleteMapping("/{id}")
     public String deleteAction(@PathVariable long id) {
         this.cashFlowRepository.deleteById(id);

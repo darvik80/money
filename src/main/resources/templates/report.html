@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Report</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/webjars/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+    <script src="/webjars/popper.js/1.14.1/umd/popper.min.js"></script>
+
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:include="navbar :: main-menu"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="pieChartWeek"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="pieChartMonth"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/webjars/highcharts/6.1.0/highcharts.js"></script>
+<script src="/webjars/highcharts/6.1.0/modules/exporting.js"></script>
+<script src="/webjars/highcharts/6.1.0/modules/export-data.js"></script>
+
+<script type="text/javascript">
+
+    function diagram(period, element) {
+        // Build the chart
+        $.get("/rest/cash_flow/report/pie/" + period, function (data) {
+            var pieData = [];
+
+            var total = 0;
+            data.forEach(function (item) {
+                pieData.push({name: item.name, y: item.amount})
+                total += item.amount;
+            });
+
+            Highcharts.chart(element, {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Money flow for ' + period +  ': ' + total + " VND"
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.y:.1f} VND / {point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Categories',
+                    colorByPoint: true,
+                    data: pieData
+                }]
+            });
+        });
+    };
+
+    function reloadDiagrams() {
+        //fnDiagram('day', 'pieChartDay');
+        diagram('week', 'pieChartWeek');
+        diagram('month', 'pieChartMonth');
+    }
+
+    reloadDiagrams();
+</script>
+
+</body>
+</html>
