@@ -29,7 +29,7 @@ public class CashFlowApiController {
 
     @GetMapping({"", "/"})
     public Page<CashFlow> flowsAction(Pageable pageable) {
-        return cashFlowRepository.findAllByOrderByIdDesc(pageable);
+        return cashFlowRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
 
