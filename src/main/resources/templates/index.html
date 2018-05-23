@@ -96,6 +96,7 @@
                     <th scope="col" class="ion-image"></th>
                     <th scope="col">Name</th>
                     <th scope="col" class="d-none d-md-block">Description</th>
+                    <th scope="col" class="d-none d-md-block">Date</th>
                     <th scope="col" class="ion-cash"></th>
                     <th scope="col" class="ion-bag "></th>
                     <th scope="col" class="ion-compose"></th>
@@ -105,7 +106,8 @@
                 <tr>
                     <td scope="row"><img src="#" alt="image" width="32" data-bind="attr: { src: category.urlImage }"></td>
                     <td data-bind="text: category.name" class="text-left">Shop</td>
-                    <td data-bind="text: description" class="d-none d-md-block text-left">Weekly shopping</td>
+                    <td data-bind="text: description" class="d-none d-md-block">Weekly shopping</td>
+                    <td data-bind="text: createdAt" class="d-none d-md-block"></td>
                     <td data-bind="attr: { class: category.operation == 1 ? 'ion-plus-circled' : 'ion-minus-circled' }"></td>
                     <td>
                         <span data-bind="text: category.currency.name" class="left"></span>:
@@ -246,6 +248,13 @@
         };
 
         self.update = function(data) {
+
+            data.content.map(function(item) {
+                item.createdAt = new Date(Date.parse(item.createdAt)).toLocaleString();
+
+            });
+
+            console.table(data.content);
             self.curPage(data.number);
             self.flows(data.content);
             self.first(data.first);
