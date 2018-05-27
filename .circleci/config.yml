@@ -39,12 +39,16 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn test
+      - run: mvn cobertura:cobertura
 
       - run: mvn package -Dspring.profiles.active=mysql -DskipTests=true
 
       - store_test_results:
           path: target/surefire-reports
+
+      - run:
+          name: codeconv.io
+          command: bash <(curl -s https://codecov.io/bash)
 
       - store_artifacts:
           path: target/money-0.0.1-SNAPSHOT.jar
