@@ -39,7 +39,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn cobertura:cobertura
+      - run: mvn clean cobertura:cobertura
 
       - run: mvn package -Dspring.profiles.active=mysql -DskipTests=true
 
