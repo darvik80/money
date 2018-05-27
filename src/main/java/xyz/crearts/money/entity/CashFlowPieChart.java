@@ -1,11 +1,11 @@
 package xyz.crearts.money.entity;
 
 public class CashFlowPieChart {
-    private Long categoryId;
+    private long categoryId;
     private String name;
-    private Double amount;
+    private double amount;
 
-    public CashFlowPieChart(Long categoryId, String name, Double amount) {
+    public CashFlowPieChart(long categoryId, String name, double amount) {
         this.categoryId = categoryId;
         this.name = name;
         this.amount = amount;
@@ -15,7 +15,7 @@ public class CashFlowPieChart {
 
     }
 
-    public Long getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
@@ -24,7 +24,7 @@ public class CashFlowPieChart {
         return name;
     }
 
-    public Double getAmount() {
+    public double getAmount() {
         return amount;
     }
 }
