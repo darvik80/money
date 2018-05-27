@@ -118,13 +118,13 @@
         </dependency>
         -->
 
-</dependencies>
+    </dependencies>
 
     <profiles>
         <profile>
             <id>dev</id>
             <activation>
-            <activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
                 <property>
                     <name>spring.profiles.active</name>
                     <value>dev</value>
@@ -214,7 +214,7 @@
                         <format>html</format>
                         <format>xml</format>
                     </formats>
-                    <check />
+                    <check/>
                 </configuration>
             </plugin>
         </plugins>
