@@ -67,7 +67,7 @@ public class CurrencyTest {
     }
 
     @Test
-    public void testGetAmounts() throws Exception {
+    public void getAmountsTest() throws Exception {
 
         Map<String, Double> result = service.getAmounts(LocalDate.of(2018,5,5), "USD", "VND", "RUB");
         assertEquals(result.get("VND"), Double.valueOf(1.0));

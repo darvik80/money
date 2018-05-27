@@ -13,9 +13,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 @Service
 public class Currency {
@@ -79,7 +79,13 @@ public class Currency {
         Map<String, Double> result = new HashMap<>();
 
         Double baseCur = response.getRates().get(base);
-        response.getRates().forEach((k, v) -> result.put(k, v/baseCur ));
+        response.getRates().forEach(new BiConsumer<String, Double>() {
+            @Override
+            public void accept(String k, Double v) {
+                result.put(k, v/baseCur);
+            }
+        });
+//                (k, v) -> result.put(k, v/baseCur ));
 
         return result;
     }
