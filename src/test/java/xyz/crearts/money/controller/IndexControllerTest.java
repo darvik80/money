@@ -11,6 +11,7 @@ import xyz.crearts.money.model.Config;
 import xyz.crearts.money.service.Currency;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -32,6 +33,30 @@ public class IndexControllerTest {
         controller = new IndexController(config, currency);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
+
+    @Test
+    public void indexTest() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("config"));
+    }
+
+    @Test
+    public void categoriesTest() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("categories"))
+                .andExpect(model().attributeExists("config"));
+    }
+
+    @Test
+    public void reportTest() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("report"))
+                .andExpect(model().attributeExists("config"));
     }
 
     @Test
