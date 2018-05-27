@@ -55,7 +55,7 @@ jobs:
 
       - run:
           name: codeconv.io
-          command: bash <(curl -s https://codecov.io/bash) -X gcov
+          command: bash <(curl -s https://codecov.io/bash)
 
   deploy:
     machine:
