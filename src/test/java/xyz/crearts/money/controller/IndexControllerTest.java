@@ -45,17 +45,17 @@ public class IndexControllerTest {
 
     @Test
     public void categoriesTest() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/categories"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("categories"))
+                .andExpect(view().name("categories.page"))
                 .andExpect(model().attributeExists("config"));
     }
 
     @Test
     public void reportTest() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/report"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("report"))
+                .andExpect(view().name("report.page"))
                 .andExpect(model().attributeExists("config"));
     }
 

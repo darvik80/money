@@ -50,10 +50,6 @@ public class Currency {
         return 0.0;
     }
 
-    public Map<String, Double> getAmounts(String base, String... symbols) throws URISyntaxException {
-        return this.getAmounts(LocalDate.now(), base, symbols);
-    }
-
     public Map<String, Double> getAmounts(LocalDate date, String base, String... symbols) throws URISyntaxException {
         String s = Stream.of(symbols).collect(Collectors.joining( "," ));
 

@@ -1,9 +1,9 @@
 package xyz.crearts.money.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import xyz.crearts.money.exception.NotFoundException;
 import xyz.crearts.money.model.Config;
 import xyz.crearts.money.service.Currency;
@@ -37,16 +37,28 @@ public class IndexController {
 
     @GetMapping("/categories")
     public String categoriesAction() {
-        return "categories";
+        return "categories.page";
     }
 
     @GetMapping("/report")
     public String reportAction() {
-        return "report";
+        return "report.page";
     }
 
     @GetMapping("/test")
     public String testAction() {
-        throw new NotFoundException();
+        throw new NotFoundException("Hello World!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(Exception ex){
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("404error");
+        modelAndView.addObject("exception", ex);
+
+        return modelAndView;
     }
 }
