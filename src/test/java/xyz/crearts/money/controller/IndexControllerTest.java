@@ -6,14 +6,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import xyz.crearts.money.exception.NotFoundException;
 import xyz.crearts.money.model.Config;
 import xyz.crearts.money.service.Currency;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class IndexControllerTest {
     @Mock
@@ -32,7 +29,9 @@ public class IndexControllerTest {
 
         controller = new IndexController(config, currency);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -60,8 +59,19 @@ public class IndexControllerTest {
     }
 
     @Test
-    public void testNotFoundTest() throws Exception {
-        mockMvc.perform(get("/test"))
+    public void NotFoundExceptionTest() throws Exception {
+        mockMvc.perform(get("/test1"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void NumberFormatExceptionTest() throws Exception {
+        mockMvc.perform(get("/test2/abs"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/test2/200"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("config"));
     }
 }

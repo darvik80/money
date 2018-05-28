@@ -1,16 +1,24 @@
 package xyz.crearts.money.controller;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import xyz.crearts.money.entity.CashFlow;
 import xyz.crearts.money.entity.CashFlowPieChart;
 import xyz.crearts.money.repository.CashFlowRepository;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/rest/cash_flow")
@@ -32,7 +40,6 @@ public class CashFlowApiController {
         flow.setId(id);
         return this.cashFlowRepository.save(flow);
     }
-
 
     @GetMapping("/report/pie/{period}")
     public List<CashFlowPieChart> pieReportAction(@PathVariable(value = "period", required = false) String period) {
@@ -57,8 +64,32 @@ public class CashFlowApiController {
         return this.cashFlowRepository.getAllGroupByCategory(Timestamp.valueOf(begin), Timestamp.valueOf(end));
     }
 
+    @Data
+    @Builder
+    static class ErrorInfo {
+        private String field;
+        private String description;
+    }
+
+
     @PostMapping("/")
-    public Object createAction(@RequestBody CashFlow flow) {
+    public Object createAction(@Valid @RequestBody CashFlow flow, BindingResult bindingResult, HttpServletResponse response) {
+        if(bindingResult.hasErrors()){
+
+            List<ErrorInfo> errors = new ArrayList<>();
+            bindingResult.getAllErrors().forEach(err -> {
+                if (err instanceof FieldError) {
+                    errors.add(ErrorInfo.builder()
+                            .field(((FieldError)err).getField())
+                            .description(err.getDefaultMessage())
+                            .build());
+                }
+            });
+
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return errors;
+        }
+
         return this.cashFlowRepository.save(flow);
     }
 

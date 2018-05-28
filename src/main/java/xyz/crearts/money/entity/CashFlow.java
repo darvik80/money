@@ -3,6 +3,7 @@ package xyz.crearts.money.entity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -18,7 +19,7 @@ public class CashFlow {
     @ManyToOne
     private Category category;
 
-    @Size(max=255)
+    @Size(min=2, max=255)
     private String description;
 
     @CreationTimestamp
@@ -28,6 +29,7 @@ public class CashFlow {
     private Double amountOrigin;
 
     @NotNull
+    @Min(0)
     private Double amount;
 
     public Long getId() {

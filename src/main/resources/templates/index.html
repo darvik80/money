@@ -78,6 +78,16 @@
                         <label for="amount">Amount</label><input type="number" data-bind="value: amount" class="form-control text-md-right" min="0" id="amount">
                     </div>
                 </div>
+                <!-- ko if: errors().length > 0  -->
+                <div class="form-row">
+                    <ul data-bind="foreach: errors">
+                        <li>
+                            <span data-bind="text: field"></span>: <span data-bind="text: description"></span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /ko -->
+
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <div class="block">
@@ -181,6 +191,8 @@
         self.last = ko.observable(false);
         self.pages = ko.observableArray();
 
+        self.errors = ko.observableArray();
+
         self.btnEditFlow = function(flow) {
             console.table(flow);
         };
@@ -212,6 +224,7 @@
                     data: JSON.stringify(flow),
                     contentType: "application/json; charset=utf-8",
                     success: function () {
+                        self.errors([]);
                         self.amount('');
                         self.getPage(self.curPage());
 
@@ -225,7 +238,12 @@
                             }
                             self.amount('');
                         }*/
+                    },
+                    error: function(data) {
+                        console.log(data.responseText);
+                        self.errors(JSON.parse(data.responseText));
                     }
+
                 }
             );
 
@@ -244,8 +262,16 @@
         };
 
         self.getPage = function(page) {
-            $.get("/rest/cash_flow?page="+page+"&size="+self.size, function (data) {
-                self.update(data);
+            $.ajax({
+                url: "/rest/cash_flow?page="+page+"&size="+self.size,
+                type: 'GET',
+                success: function(data){
+                    self.update(data);
+                },
+                error: function(data) {
+                    alert("test");
+                    console.table(data);
+                }
             });
         };
 
@@ -256,7 +282,6 @@
 
             });
 
-            console.table(data.content);
             self.curPage(data.number);
             self.flows(data.content);
             self.first(data.first);
