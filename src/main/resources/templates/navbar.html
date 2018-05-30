@@ -1,6 +1,6 @@
 <th:block th:fragment="main-menu" xmlns:th="http://www.thymeleaf.org">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">Money</a>
+        <a class="navbar-brand ion-social-bitcoin" href="/"> Money</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,5 +10,8 @@
                 <a class="nav-item nav-link" href="categories">Categories</a>
             </div>
         </div>
+        <form th:action="@{/logout}" method="post" class="form-inline">
+            <input type="submit" value="Logout" class="btn btn-success"/>
+        </form>
     </nav>
 </th:block>
