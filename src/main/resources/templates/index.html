@@ -198,7 +198,7 @@
         };
         self.btnDeleteFlow = function(flow) {
             $.ajax({
-                url: 'http://localhost/rest/cash_flow/' + flow.id, type: "DELETE",
+                url: '/rest/cash_flow/' + flow.id, type: "DELETE",
                 success: function () {
                     self.getPage(self.curPage());
                 }
@@ -219,7 +219,7 @@
             };
 
             $.ajax({
-                    url: "http://localhost/rest/cash_flow/",
+                    url: "/rest/cash_flow/",
                     type: "POST",
                     data: JSON.stringify(flow),
                     contentType: "application/json; charset=utf-8",
@@ -263,7 +263,7 @@
 
         self.getPage = function(page) {
             $.ajax({
-                url: "http://localhost/rest/cash_flow?page="+page+"&size="+self.size,
+                url: "/rest/cash_flow?page="+page+"&size="+self.size,
                 type: 'GET',
                 success: function(data){
                     self.update(data);
@@ -293,7 +293,7 @@
         self.getPage(0);
     });
 
-    $.get("http://localhost/rest/category", function (data) {
+    $.get("/rest/category", function (data) {
         self.categories(data);
     });
 
