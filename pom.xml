@@ -24,6 +24,7 @@
         <java.version>1.8</java.version>
         <bootstrap.version>4.1.0</bootstrap.version>
         <popper.version>1.12.9</popper.version>
+        <javamail.version>1.6.1</javamail.version>
     </properties>
 
     <dependencies>
@@ -122,6 +123,34 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <!-- smtp { -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${javamail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javamail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nithril</groupId>
+            <artifactId>smtp-connection-pool</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>3.1.7</version>
+        </dependency>
+
+        <!-- } smtp -->
 
         <!--
         <dependency>
