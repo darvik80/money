@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
@@ -57,14 +58,21 @@ public class MailReporter {
     }
     */
 
+    @PostConstruct
+    public void postConstruct() throws Exception{
+        //this.sendReport("html/report.daily", null);
+    }
+
     public void sendReport(String template, Map<String, Object> params) throws MessagingException {
+
+        String body = this.render(template, params);
 
         MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false);
         mimeMessageHelper.addTo("darvik80@gmail.com");
         mimeMessageHelper.setFrom("noreply@support.lazada.sg");
         mimeMessageHelper.setSubject("Hi! " + UUID.randomUUID().toString());
-        mimeMessageHelper.setText(this.render(template, params));
+        mimeMessageHelper.setText(body);
         this.mailSender.send(mimeMessage);
     }
 

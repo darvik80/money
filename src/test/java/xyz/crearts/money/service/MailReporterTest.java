@@ -47,7 +47,7 @@ public class MailReporterTest {
     }
 
     @Test
-    public void sendTest() throws MessagingException {
+    public void sendTest() throws Exception {
         reporter.sendReport("html/test2", null);
 
         List<WiserMessage> msgs = this.smtp.getMessages();
