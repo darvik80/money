@@ -16,6 +16,7 @@ INSERT INTO category (id, name, description, currency_id, operation, url_image) 
 INSERT INTO category (id, name, description, currency_id, operation, url_image) VALUES (10, 'Sauna', 'Golder lotus', 2, 2, '/images/sauna-icon.png');
 INSERT INTO category (id, name, description, currency_id, operation, url_image) VALUES (11, 'Pharmacy', 'Medicines, vitamins ...', 2, 2, '/images/drugstore-icon.png');
 INSERT INTO category (id, name, description, currency_id, operation, url_image) VALUES (12, 'Other', 'Some other...', 2, 2, '/images/other-icon.png');
+INSERT INTO category (id, name, description, currency_id, operation, url_image) VALUES (13, 'IT', 'IT Services', 2, 2, '/images/it-icon.png');
 
 INSERT INTO image (url) VALUES ('/images/shop-icon.png');
 INSERT INTO image (url) VALUES ('/images/beer-icon.png');
