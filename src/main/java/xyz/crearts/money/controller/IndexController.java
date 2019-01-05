@@ -45,17 +45,4 @@ public class IndexController {
     public String reportAction() {
         return "report.page";
     }
-
-    @GetMapping("/test1")
-    public String test1Action() {
-        throw new NotFoundException("Hello World!");
-    }
-
-    @GetMapping("/test2/{id}")
-    public String test2Action(@PathVariable("id") long id) {
-
-        System.out.println(id);
-        return "index";
-    }
-
 }

@@ -57,21 +57,4 @@ public class IndexControllerTest {
                 .andExpect(view().name("report.page"))
                 .andExpect(model().attributeExists("config"));
     }
-
-    @Test
-    public void NotFoundExceptionTest() throws Exception {
-        mockMvc.perform(get("/test1"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void NumberFormatExceptionTest() throws Exception {
-        mockMvc.perform(get("/test2/abs"))
-                .andExpect(status().isBadRequest());
-
-        mockMvc.perform(get("/test2/200"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("index"))
-                .andExpect(model().attributeExists("config"));
-    }
 }
